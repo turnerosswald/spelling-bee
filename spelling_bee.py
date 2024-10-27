@@ -10,20 +10,29 @@ pygame.mixer.init()
 
 # Load audio files
 audio_files = [
-    pygame.mixer.Sound("C:/Users/turno/OneDrive/Documents/cs-hw/open project/answer audios/first_ans.mp3"),
-    pygame.mixer.Sound("C:/Users/turno/OneDrive/Documents/cs-hw/open project/answer audios/second_ans.mp3"),
-    pygame.mixer.Sound("C:/Users/turno/OneDrive/Documents/cs-hw/open project/answer audios/third_ans.mp3"),
-    pygame.mixer.Sound("C:/Users/turno/OneDrive/Documents/cs-hw/open project/answer audios/final_ans.mp3")
+    pygame.mixer.Sound("answer audios/first_ans.mp3"),
+    pygame.mixer.Sound("answer audios/second_ans.mp3"),
+    pygame.mixer.Sound("answer audios/third_ans.mp3"),
+    pygame.mixer.Sound("answer audios/final_ans.mp3")
 ]
 
 # Set up the display to full screen
+pygame.mixer.music.load("background audio.mp3")
+pygame.mixer.music.play(-1)
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 width, height = screen.get_size()
 pygame.display.set_caption("User Input Example")
 
 # Load the background image
-background_image = pygame.image.load("pixil-frame-0 (3).png")
-background_image = pygame.transform.scale(background_image, (width, height))
+background_image = pygame.image.load("noir level.png")
+bg_width, bg_height = background_image.get_size()
+print(background_image.get_size())
+
+# Define the area of the background to show (e.g., bottom left 200x100 area)
+
+
+current_background_rect = pygame.Rect(600, 4700, 1000,700)  # Adjust coordinates as needed
+# (600, 4700, 1000,700)
 
 # Set up colors
 white = (255, 255, 255)
@@ -115,8 +124,14 @@ while True:
                 active = False
             color = color_active if active else color_inactive
 
-    # Draw the background image
-    screen.blit(background_image, (0, 0))
+    # Extract the specific part of the background image
+    cropped_background = background_image.subsurface(current_background_rect)
+
+    # Scale the cropped background to fit the screen
+    scaled_background = pygame.transform.scale(cropped_background, (width, height))
+
+    # Draw the scaled cropped background image
+    screen.blit(scaled_background, (0, 0))
 
     # Draw the input box
     pygame.draw.rect(screen, color, input_box, 2)
@@ -130,10 +145,10 @@ while True:
         draw_text(screen, f"Spell: {answer}", (width / 2, height / 5 + 40), font, white)
 
     # Render the points at the top right corner
-    draw_text(screen, f"Points: {points}", (2*width/3, height/2), font, white)
+    draw_text(screen, f"Points: {points}", (2 * width / 3, height / 2), font, white)
 
     # Render lives at the top right corner
-    draw_text(screen, f"Lives left: {lives}", (width/3, height/2), font, white)
+    draw_text(screen, f"Lives left: {lives}", (width / 3, height / 2), font, white)
 
     # Update the display
     pygame.display.flip()
